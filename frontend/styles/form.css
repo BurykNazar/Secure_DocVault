@@ -1,0 +1,32 @@
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.rules {
+  display: grid;
+  gap: 3px;
+  margin-top: 2px;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+.rules li::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--clay);
+  vertical-align: 2px;
+}
+
+.form__notice {
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  color: var(--danger);
+  background: var(--danger-wash);
+  border: 1px solid rgba(156, 54, 40, 0.18);
+  border-radius: 10px;
+}

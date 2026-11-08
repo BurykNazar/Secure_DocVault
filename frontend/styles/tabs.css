@@ -1,0 +1,35 @@
+.tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.tab {
+  position: relative;
+  padding: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  background: none;
+  border: 0;
+  transition: color var(--ease);
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab--active {
+  color: var(--forest);
+}
+
+.tab--active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--forest);
+}

@@ -1,0 +1,64 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  min-height: 100vh;
+}
+
+.story {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: clamp(26px, 4vw, 54px);
+  overflow: hidden;
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(0deg, var(--paper-line) 0 1px, transparent 1px 5px);
+  border-right: 1px solid var(--line);
+}
+
+.story__head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: #f4efe2;
+}
+
+.mark .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.mark__word {
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  letter-spacing: -0.01em;
+}
+
+.story__body {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(16px, 5vh, 64px);
+  max-width: 31rem;
+}
+
+.gate {
+  display: grid;
+  place-items: center;
+  padding: clamp(26px, 5vw, 64px) clamp(18px, 4vw, 54px);
+  background: var(--surface);
+}
+
+.gate > * {
+  width: min(100%, 424px);
+}

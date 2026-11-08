@@ -1,0 +1,73 @@
+.stack {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  padding: clamp(24px, 3vw, 34px);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: card-in 340ms ease both;
+}
+
+.card__head {
+  margin-bottom: 22px;
+}
+
+.card__kicker {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
+}
+
+.card__title {
+  margin-top: 7px;
+  font-family: var(--serif);
+  font-size: 1.95rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.card__lead {
+  margin-top: 7px;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.card__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  background: var(--forest-wash);
+  border-radius: var(--radius-sm);
+}
+
+.card__note .icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--forest);
+}
+
+.card__legal {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}

@@ -1,0 +1,32 @@
+.story__kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--clay);
+}
+
+.story__title {
+  margin-top: 14px;
+  max-width: 13ch;
+  font-family: var(--serif);
+  font-size: clamp(2.35rem, 4.1vw, 3.7rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+}
+
+.story__text {
+  margin-top: 20px;
+  max-width: 34ch;
+  color: var(--ink-soft);
+}
+
+.story__art {
+  position: absolute;
+  right: 18px;
+  bottom: 36px;
+  width: clamp(130px, 11vw, 210px);
+  opacity: 0.35;
+  z-index: 0;
+  pointer-events: none;
+}

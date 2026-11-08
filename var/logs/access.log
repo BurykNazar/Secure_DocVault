@@ -1,0 +1,6 @@
+{"at": "2026-11-08T16:52:15+00:00", "event": "sign_up_rejected", "ip": "127.0.0.1", "username": "Buryk", "reason": "validation", "fields": ["password"]}
+{"at": "2026-11-08T16:52:23+00:00", "event": "account_created", "ip": "127.0.0.1", "account": 1, "username": "Buryk"}
+{"at": "2026-11-08T16:52:43+00:00", "event": "sign_up_rejected", "ip": "127.0.0.1", "username": "Buryk1", "reason": "validation", "fields": ["password"]}
+{"at": "2026-11-08T16:53:13+00:00", "event": "account_created", "ip": "127.0.0.1", "account": 2, "username": "Buryk1"}
+{"at": "2026-11-08T16:53:15+00:00", "event": "sign_in", "ip": "127.0.0.1", "account": 2, "username": "Buryk1"}
+{"at": "2026-11-08T16:54:33+00:00", "event": "sign_in_rejected", "ip": "127.0.0.1", "username": "Buryk1", "reason": "wrong_password", "attempt": 1}

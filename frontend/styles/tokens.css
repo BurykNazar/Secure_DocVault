@@ -1,0 +1,28 @@
+:root {
+  --paper: #efe7d8;
+  --paper-line: rgba(28, 39, 35, 0.045);
+  --surface: #fbf8f1;
+
+  --ink: #1c2723;
+  --ink-soft: #4a5751;
+  --ink-faint: #7c8680;
+
+  --forest: #12483a;
+  --forest-deep: #0a3328;
+  --forest-wash: #e4ede6;
+  --clay: #b25d3c;
+
+  --line: #d6cbb7;
+  --line-soft: #e7decd;
+
+  --danger: #9c3628;
+  --danger-wash: #f9ebe6;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+
+  --radius: 18px;
+  --radius-sm: 11px;
+  --ease: 180ms ease;
+  --shadow: 0 30px 70px -40px rgba(28, 39, 35, 0.45);
+}

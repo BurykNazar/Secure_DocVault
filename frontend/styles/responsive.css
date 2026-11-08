@@ -1,0 +1,67 @@
+@media (max-width: 720px) {
+  .story__art {
+    display: none;
+  }
+}
+
+@media (max-width: 1020px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .story {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 26px;
+  }
+
+  .story__body {
+    margin-top: 18px;
+  }
+
+  .story__title {
+    font-size: clamp(2rem, 6vw, 2.9rem);
+    max-width: 18ch;
+  }
+
+  .gate {
+    padding-top: 34px;
+    padding-bottom: 48px;
+  }
+}
+
+@media (max-width: 560px) {
+  .story {
+    padding: 20px 18px;
+  }
+
+  .story__text {
+    font-size: 0.94rem;
+  }
+
+  .gate {
+    padding: 26px 16px 40px;
+  }
+
+  .card {
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+
+  .card__title {
+    font-size: 1.7rem;
+  }
+
+  .facts > div {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .facts dd {
+    text-align: left;
+  }
+
+  .account__actions .btn {
+    width: 100%;
+  }
+}

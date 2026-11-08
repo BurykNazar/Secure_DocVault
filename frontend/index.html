@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Secure DocVault — приватне сховище конфіденційних документів компанії.">
+  <title>Secure DocVault — приватне сховище</title>
+  <link rel="icon" href="/static/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/styles/tokens.css">
+  <link rel="stylesheet" href="/static/styles/base.css">
+  <link rel="stylesheet" href="/static/styles/layout.css">
+  <link rel="stylesheet" href="/static/styles/story.css">
+  <link rel="stylesheet" href="/static/styles/card.css">
+  <link rel="stylesheet" href="/static/styles/tabs.css">
+  <link rel="stylesheet" href="/static/styles/field.css">
+  <link rel="stylesheet" href="/static/styles/form.css">
+  <link rel="stylesheet" href="/static/styles/buttons.css">
+  <link rel="stylesheet" href="/static/styles/account.css">
+  <link rel="stylesheet" href="/static/styles/toast.css">
+  <link rel="stylesheet" href="/static/styles/responsive.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="story">
+      <header class="story__head">
+        <span class="mark"><svg class="icon" aria-hidden="true"><use href="/static/assets/icons.svg#vault"></use></svg></span>
+        <span class="mark__word">Secure DocVault</span>
+      </header>
+
+      <div class="story__body">
+        <p class="story__kicker">Приватний документообіг</p>
+        <h1 class="story__title">Документи, які не залишають кімнати.</h1>
+        <p class="story__text">Конфіденційні матеріали компанії живуть окремо від сторонніх очей. Доступ — лише для тих, кому ви довіряєте.</p>
+      </div>
+
+      <img class="story__art" src="/static/assets/vault.svg" alt="" width="260" height="260">
+    </aside>
+
+    <main class="gate" id="gate"></main>
+  </div>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <script type="module" src="/static/scripts/app.js"></script>
+</body>
+</html>

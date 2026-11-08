@@ -1,0 +1,67 @@
+.who {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.who__avatar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: #f4f0e4;
+  background: var(--forest);
+  border-radius: 50%;
+}
+
+.who__name {
+  margin-top: 4px;
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  word-break: break-word;
+}
+
+.facts {
+  display: grid;
+  margin-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.facts > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.facts dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+
+.facts dt .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.facts dd {
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.account__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}

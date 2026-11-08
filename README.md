@@ -61,7 +61,6 @@ Linux/macOS: `source venv/bin/activate` замість `Activate.ps1`.
   `Authorization: Bearer <token>`.
 
 Докладніше: [`docs/security.md`](docs/security.md).
-
 ## Перевірка
 
 ```powershell
@@ -73,6 +72,7 @@ python -m pytest
 `users` для протоколу:
 
 ```powershell
+python tools/jwt_demo.py
 python tools/injection_check.py
 python tools/db_report.py
 ```

@@ -34,7 +34,7 @@ def test_password_is_stored_as_salted_bcrypt_hash(client):
     assert row["password_hash"].startswith("$2b$")
     assert row["password_hash"] != GOOD_PASSWORD
     assert row["salt"] in row["password_hash"]
-    assert (row["is_active"], row["failed_attempts"]) == (1, 0)
+    assert row["is_active"] == 1
 
 
 def test_equal_passwords_give_different_hashes(client):
@@ -49,24 +49,24 @@ def test_equal_passwords_give_different_hashes(client):
     assert first["password_hash"] != second["password_hash"]
 
 
-def test_duplicate_username_ignores_case(client):
+def test_duplicate_username_is_rejected(client):
     client.post("/api/v1/accounts/register", json=form())
 
     response = client.post(
         "/api/v1/accounts/register",
-        json=form(username="NAZAR_BURYK", email="other@example.com"),
+        json=form(email="other@example.com"),
     )
 
     assert response.status_code == 409
     assert "username" in response.json()["error"]["fields"]
 
 
-def test_duplicate_email_ignores_case(client):
+def test_duplicate_email_is_rejected(client):
     client.post("/api/v1/accounts/register", json=form())
 
     response = client.post(
         "/api/v1/accounts/register",
-        json=form(username="another_user", email="NAZAR@example.com"),
+        json=form(username="another_user"),
     )
 
     assert response.status_code == 409

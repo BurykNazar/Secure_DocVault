@@ -62,13 +62,13 @@ def test_payload_in_signup_fields_is_rejected(client):
     assert mail.status_code == 400 and "email" in mail.json()["error"]["fields"]
 
 
-def test_status_reports_healthy_database(client, member):
+def test_database_stays_intact_after_attacks(client, member):
     for payload in PAYLOADS:
         client.post(
             "/api/v1/accounts/login",
             json={"username": payload, "password": "x"},
         )
 
-    body = client.get("/api/v1/status").json()
-    assert body["database"] == "ready"
-    assert body["accounts"] == 1
+    with session() as connection:
+        total = connection.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    assert total == 1

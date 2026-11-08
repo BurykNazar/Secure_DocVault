@@ -6,7 +6,7 @@ import re
 
 from .password_rules import problems as password_problems
 
-NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]{2,29}$")
+NAME = re.compile(r"^[A-Za-z0-9_]{3,30}$")
 MAIL = re.compile(r"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$")
 
 
@@ -20,19 +20,16 @@ def validate_signup(
         issues["username"] = ["Вкажіть ім'я користувача"]
     elif not NAME.fullmatch(name):
         issues["username"] = [
-            "3–30 символів: латинські літери, цифри та «_», "
-            "перший символ — літера"
+            "3–30 символів: латинські літери, цифри та «_»"
         ]
 
     address = email.strip()
     if not address:
         issues["email"] = ["Вкажіть електронну адресу"]
-    elif len(address) > 254 or ".." in address or not MAIL.fullmatch(address):
+    elif ".." in address or not MAIL.fullmatch(address):
         issues["email"] = ["Перевірте формат електронної адреси"]
-    elif len(address.split("@", 1)[0]) > 64:
-        issues["email"] = ["Локальна частина адреси задовга"]
 
-    weak = password_problems(password, username=name, email=address)
+    weak = password_problems(password)
     if weak:
         issues["password"] = weak
 

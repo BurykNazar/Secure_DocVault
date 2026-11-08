@@ -15,15 +15,6 @@ def test_sign_in_succeeds(client, member):
     assert response.json()["account"]["username"] == "nazar_buryk"
 
 
-def test_username_match_ignores_case(client, member):
-    response = client.post(
-        "/api/v1/accounts/login",
-        json={"username": "NAZAR_BURYK", "password": GOOD_PASSWORD},
-    )
-
-    assert response.status_code == 200
-
-
 def test_wrong_password_is_rejected(client, member):
     response = client.post(
         "/api/v1/accounts/login",

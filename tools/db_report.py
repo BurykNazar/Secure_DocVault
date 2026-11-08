@@ -28,7 +28,7 @@ def main() -> int:
     rows = connection.execute(
         """
         SELECT id, username, email, password_hash, salt, role,
-               created_at, is_active, failed_attempts, locked_until
+               created_at, is_active
           FROM users ORDER BY id
         """
     ).fetchall()
@@ -41,14 +41,12 @@ def main() -> int:
     print(f"Записів: {len(rows)}\n")
     for row in rows:
         print(f"#{row['id']}  {row['username']}")
-        print(f"    email           : {row['email']}")
-        print(f"    password_hash   : {row['password_hash']}")
-        print(f"    salt            : {row['salt']}")
-        print(f"    role            : {row['role']}")
-        print(f"    created_at      : {row['created_at']}")
-        print(f"    is_active       : {row['is_active']}")
-        print(f"    failed_attempts : {row['failed_attempts']}")
-        print(f"    locked_until    : {row['locked_until'] or '—'}")
+        print(f"    email         : {row['email']}")
+        print(f"    password_hash : {row['password_hash']}")
+        print(f"    salt          : {row['salt']}")
+        print(f"    role          : {row['role']}")
+        print(f"    created_at    : {row['created_at']}")
+        print(f"    is_active     : {row['is_active']}")
         print()
 
     print("Відкритого пароля немає — лише bcrypt-хеш із сіллю.")

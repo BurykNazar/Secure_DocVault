@@ -10,8 +10,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sqlite3
+import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from secure_docvault.settings import settings  # noqa: E402
 
 PAYLOADS = [
     ("класичний обхід", "' OR '1'='1"),
@@ -40,12 +47,6 @@ def post(url: str, payload: dict) -> tuple[int, dict]:
             return error.code, {"raw": raw}
 
 
-def get(url: str) -> tuple[int, dict]:
-    request = urllib.request.Request(url, headers={"Accept": "application/json"})
-    with urllib.request.urlopen(request, timeout=5) as response:
-        return response.status, json.loads(response.read().decode("utf-8"))
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Перевірка захисту від SQL-ін'єкцій")
     parser.add_argument("--base-url", default="http://127.0.0.1:8000")
@@ -53,9 +54,8 @@ def main() -> int:
 
     login = f"{args.base_url}/api/v1/accounts/login"
     register = f"{args.base_url}/api/v1/accounts/register"
-
     try:
-        get(f"{args.base_url}/api/v1/status")
+        urllib.request.urlopen(args.base_url, timeout=5).close()
     except (urllib.error.URLError, TimeoutError):
         print(f"Сервер недоступний: {args.base_url}. Запустіть `python manage.py`.")
         return 1
@@ -73,20 +73,20 @@ def main() -> int:
     print("2. Реєстрація з SQL-синтаксисом в імені\n")
     status, body = post(
         register,
-        {
-            "username": "admin' OR '1'='1",
-            "email": "attacker@example.com",
-            "password": "SecurePass1!",
-        },
+        {"username": "admin' OR '1'='1", "email": "attacker@example.com", "password": "SecurePass1!"},
     )
     verdict = "ЗАХИЩЕНО" if status == 400 else "ПЕРЕВІРИТИ"
     failures += status != 400
-    print(f"  [{verdict}] HTTP {status}")
-    print(f"             поля: {json.dumps(body.get('error', {}).get('fields', {}), ensure_ascii=False)}\n")
+    fields = json.dumps(body.get("error", {}).get("fields", {}), ensure_ascii=False)
+    print(f"  [{verdict}] HTTP {status}\n             поля: {fields}\n")
 
     print("3. Цілісність бази після атак\n")
-    status, health = get(f"{args.base_url}/api/v1/status")
-    print(f"  HTTP {status} — стан: {health.get('database')}, записів: {health.get('accounts')}")
+    connection = sqlite3.connect(settings.database)
+    try:
+        total = connection.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    finally:
+        connection.close()
+    print(f"  Таблиця users доступна, записів: {total}")
 
     if failures:
         print(f"\nПроблем: {failures}. Перевірте серверну логіку.")

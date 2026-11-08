@@ -7,9 +7,6 @@
 
 from __future__ import annotations
 
-import secrets
-from functools import lru_cache
-
 import bcrypt
 
 from ..settings import settings
@@ -35,19 +32,3 @@ def matches(password: str, digest: str) -> bool:
         return bcrypt.checkpw(raw, digest.encode("ascii"))
     except (ValueError, TypeError):
         return False
-
-
-@lru_cache(maxsize=1)
-def _decoy() -> str:
-    salt = bcrypt.gensalt(rounds=settings.hash_rounds)
-    return bcrypt.hashpw(secrets.token_bytes(32), salt).decode("ascii")
-
-
-def spend_comparison_time(password: str) -> None:
-    """Холостий прогін, щоб «немає такого користувача» не відрізнялося
-    за часом від «є користувач, але пароль невірний»."""
-    raw = password.encode("utf-8")[:BYTE_LIMIT]
-    try:
-        bcrypt.checkpw(raw, _decoy().encode("ascii"))
-    except (ValueError, TypeError):
-        pass

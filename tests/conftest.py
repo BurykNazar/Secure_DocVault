@@ -20,7 +20,6 @@ sys.path.insert(0, str(ROOT))
 _TEMP = Path(tempfile.mkdtemp(prefix="docvault-tests-"))
 os.environ["VAULT_DATA_DIR"] = str(_TEMP)
 os.environ["VAULT_DB"] = str(_TEMP / "test.sqlite3")
-os.environ["VAULT_LOG_DIR"] = str(_TEMP / "logs")
 os.environ["VAULT_HASH_ROUNDS"] = "4"
 
 from fastapi.testclient import TestClient  # noqa: E402

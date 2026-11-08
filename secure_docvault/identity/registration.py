@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import logging
 import sqlite3
 
-from ..diagnostics import audit
 from ..transport.errors import DuplicateAccount, ValidationRejected
 from . import mutations, queries
 from .account_rules import validate_signup
@@ -13,22 +11,13 @@ from .hashing import seal
 from .models import SignUp
 from .profile import public
 
-log = logging.getLogger("vault.identity")
 
-
-def sign_up(payload: SignUp, ip: str) -> dict:
+def sign_up(payload: SignUp) -> dict:
     username = payload.username.strip()
-    email = payload.email.strip().lower()
+    email = payload.email.strip()
 
     issues = validate_signup(username, email, payload.password)
     if issues:
-        audit(
-            "sign_up_rejected",
-            ip=ip,
-            username=username,
-            reason="validation",
-            fields=sorted(issues),
-        )
         raise ValidationRejected("Перевірте введені дані", fields=issues)
 
     if queries.by_username(username):
@@ -58,6 +47,4 @@ def sign_up(payload: SignUp, ip: str) -> dict:
 
     account = queries.by_id(account_id)
     assert account is not None
-    audit("account_created", ip=ip, account=account_id, username=username)
-    log.info("Створено обліковий запис «%s»", username)
     return public(account)

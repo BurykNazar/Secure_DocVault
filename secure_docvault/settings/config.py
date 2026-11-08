@@ -25,6 +25,7 @@ class Settings:
     database: Path
     client: Path
     hash_rounds: int
+    jwt_secret: str
 
     @classmethod
     def read(cls) -> "Settings":
@@ -38,6 +39,13 @@ class Settings:
             client=ROOT / "frontend",
             # bcrypt приймає 4..31; тримаємо здоровий діапазон.
             hash_rounds=max(4, min(env.number("VAULT_HASH_ROUNDS", 12), 15)),
+            # 64 hex-символи = 256 біт. У робочому середовищі задається
+            # через .env; значення нижче — лише для локального запуску.
+            jwt_secret=env.text(
+                "VAULT_JWT_SECRET",
+                "7d3f9a2c5e8b1d4f6a9c3e7b0d5f8a2c"
+                "4e6b9d1f3a5c7e0b2d4f6a8c1e3b5d7f",
+            ),
         )
 
 

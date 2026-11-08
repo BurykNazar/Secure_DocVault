@@ -14,3 +14,7 @@ class SignIn(BaseModel):
     # безпечно потрапляє в параметризований запит.
     username: str = Field(default="", max_length=255)
     password: str = Field(default="", max_length=128)
+
+
+class RefreshPayload(BaseModel):
+    refresh_token: str = Field(default="", max_length=4096)

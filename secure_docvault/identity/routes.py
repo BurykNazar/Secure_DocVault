@@ -5,6 +5,7 @@ from fastapi import APIRouter, status
 from .authentication import sign_in
 from .models import SignIn, SignUp
 from .registration import sign_up
+from .tokens import issue_pair
 
 router = APIRouter(prefix="/api/v1/accounts", tags=["Облікові записи"])
 
@@ -30,4 +31,5 @@ def login(payload: SignIn) -> dict:
         "ok": True,
         "message": f"Вітаємо, {account['username']}!",
         "account": account,
+        **issue_pair(account),
     }

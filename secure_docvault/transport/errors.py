@@ -46,12 +46,6 @@ class InvalidLogin(DomainError):
     brief = "Невірні облікові дані"
 
 
-class AccessDenied(DomainError):
-    status = 403
-    code = "access_denied"
-    brief = "Доступ заборонено"
-
-
 class MissingResource(DomainError):
     status = 404
     code = "not_found"
@@ -64,7 +58,13 @@ class DuplicateAccount(DomainError):
     brief = "Обліковий запис уже існує"
 
 
-class AccountBlocked(DomainError):
-    status = 423
-    code = "account_blocked"
-    brief = "Обліковий запис тимчасово заблоковано"
+class TokenRejected(DomainError):
+    status = 401
+    code = "invalid_token"
+    brief = "Недійсний токен"
+
+
+class ReplayDetected(DomainError):
+    status = 401
+    code = "token_reuse"
+    brief = "Токен уже використано"

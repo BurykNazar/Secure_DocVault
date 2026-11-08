@@ -25,26 +25,24 @@ Linux/macOS: `source venv/bin/activate` замість `Activate.ps1`.
 ## Налаштування
 
 Скопіюйте `.env.example` у `.env`, якщо потрібно змінити адресу, шлях до
-бази або фактор трудомісткості хешування.
+бази, фактор трудомісткості хешування або секрет підпису JWT
+(`VAULT_JWT_SECRET`, не коротший за 32 символи).
 
 ## API
 
 | Метод | Шлях | Призначення |
 |---|---|---|
 | POST | `/api/v1/accounts/register` | створити обліковий запис |
-| POST | `/api/v1/accounts/login` | увійти |
+| POST | `/api/v1/accounts/login` | увійти, отримати пару токенів |
+| POST | `/api/v1/auth/refresh` | оновити пару токенів |
+| GET | `/api/v1/user/profile` | профіль за access-токеном |
 
 Помилки мають єдиний вигляд:
 
 ```json
-{
-  "ok": false,
-  "error": {
-    "code": "validation_failed",
-    "message": "Перевірте введені дані",
-    "fields": {"password": ["Додайте цифру"]}
-  }
-}
+{"ok": false,
+ "error": {"code": "validation_failed", "message": "Перевірте введені дані",
+           "fields": {"password": ["Додайте цифру"]}}}
 ```
 
 Сервер повертає всі зауваження до форми одразу, а клієнт лише показує
@@ -56,7 +54,11 @@ Linux/macOS: `source venv/bin/activate` замість `Activate.ps1`.
 * лише параметризовані SQL-запити (`?`), без склеювання рядків;
 * однакове повідомлення для невідомого користувача та невірного пароля;
 * перевірка складності пароля та обмеження довжини 72 байтами;
-* валідація імені користувача й електронної адреси на сервері.
+* валідація імені користувача й електронної адреси на сервері;
+* JWT (HS256): access — 15 хв, refresh — 7 діб, ротація refresh і
+  відкликання використаних токенів, заборона `alg: none`;
+* захищений маршрут `/api/v1/user/profile` перевіряє
+  `Authorization: Bearer <token>`.
 
 Докладніше: [`docs/security.md`](docs/security.md).
 
@@ -83,7 +85,7 @@ secure_docvault/
   factory.py               складання FastAPI-застосунку
   settings/                конфігурація з .env
   persistence/             SQLite: з'єднання, схема
-  identity/                облікові записи: правила, хешування, сервіси
+  identity/                облікові записи: правила, хешування, сервіси, JWT
   transport/               єдиний формат помилок
   site/                    віддача вебклієнта
 frontend/                  каркас, власні SVG, стилі, компоненти
@@ -93,4 +95,5 @@ tools/                     допоміжні скрипти для звіту
 
 Принципи архітектури та межа у 100 рядків на файл — у
 [`docs/architecture.md`](docs/architecture.md), порядок перевірки — у
-[`docs/testing.md`](docs/testing.md).
+[`docs/testing.md`](docs/testing.md) і
+[`docs/testing-jwt.md`](docs/testing-jwt.md).

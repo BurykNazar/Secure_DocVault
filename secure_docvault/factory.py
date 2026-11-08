@@ -7,7 +7,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from .identity.profile_routes import router as profile_routes
 from .identity.routes import router as identity_routes
+from .identity.session_routes import router as session_routes
 from .persistence.schema import install
 from .settings import settings
 from .site.pages import router as site_routes
@@ -27,7 +29,7 @@ def build() -> FastAPI:
 
     application = FastAPI(
         title="Secure DocVault API",
-        version="0.1.0",
+        version="0.2.0",
         description="Корпоративне сховище конфіденційних документів.",
         lifespan=_lifecycle,
         docs_url="/api/docs",
@@ -37,6 +39,8 @@ def build() -> FastAPI:
 
     attach(application)
     application.include_router(identity_routes)
+    application.include_router(session_routes)
+    application.include_router(profile_routes)
     application.include_router(site_routes)
 
     if settings.client.is_dir():

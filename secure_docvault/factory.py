@@ -13,6 +13,7 @@ from .identity.session_routes import router as session_routes
 from .persistence.schema import install
 from .settings import settings
 from .site.pages import router as site_routes
+from .site.reference import router as reference_routes
 from .transport.handlers import attach
 
 
@@ -32,8 +33,8 @@ def build() -> FastAPI:
         version="0.2.0",
         description="Корпоративне сховище конфіденційних документів.",
         lifespan=_lifecycle,
-        docs_url="/api/docs",
-        redoc_url="/api/redoc",
+        docs_url=None,
+        redoc_url=None,
         openapi_url="/api/openapi.json",
     )
 
@@ -42,6 +43,7 @@ def build() -> FastAPI:
     application.include_router(session_routes)
     application.include_router(profile_routes)
     application.include_router(site_routes)
+    application.include_router(reference_routes)
 
     if settings.client.is_dir():
         application.mount(

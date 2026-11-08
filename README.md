@@ -18,7 +18,7 @@ python manage.py
 ```
 
 * Інтерфейс: <http://127.0.0.1:8000/>
-* Документація API: <http://127.0.0.1:8000/api/docs>
+* Документація API (Scalar): <http://127.0.0.1:8000/api/docs>
 
 Linux/macOS: `source venv/bin/activate` замість `Activate.ps1`.
 

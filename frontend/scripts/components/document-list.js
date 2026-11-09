@@ -3,6 +3,7 @@ import { fetchFile, saveBlob } from "../core/download.js";
 import { longDate } from "../core/format.js";
 import { fromHTML, icon } from "../core/markup.js";
 import { toast } from "../ui/toast.js";
+import { confirmDelete } from "./confirm-dialog.js";
 
 const EMPTY = `<p class="documents__empty">Ще немає документів.</p>`;
 
@@ -80,7 +81,11 @@ export function createDocumentList({ onChanged }) {
   }
 
   async function remove(document) {
-    if (!window.confirm(`Видалити «${document.original_filename}»?`)) return;
+    const confirmed = await confirmDelete({
+      title: "Видалити документ?",
+      message: `«${document.original_filename}» буде видалено разом із підписом.`,
+    });
+    if (!confirmed) return;
     try {
       await call(`/api/v1/documents/${document.id}`, { method: "DELETE" });
       toast("Документ видалено.");

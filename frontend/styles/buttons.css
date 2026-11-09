@@ -46,3 +46,16 @@
   color: var(--forest);
   border-color: var(--forest);
 }
+
+.btn--danger {
+  color: #fff;
+  background: var(--danger);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #7f2b20;
+}
+
+.btn--danger:active:not(:disabled) {
+  transform: translateY(1px);
+}

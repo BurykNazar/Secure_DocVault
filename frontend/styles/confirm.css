@@ -1,0 +1,82 @@
+/* Діалог підтвердження небезпечної дії. */
+
+.confirm-dialog {
+  width: min(92vw, 430px);
+  padding: 0;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.confirm-dialog[open] {
+  animation: confirm-in 180ms ease both;
+}
+
+.confirm-dialog::backdrop {
+  background: rgba(10, 30, 24, 0.52);
+  backdrop-filter: blur(3px);
+}
+
+.confirm-dialog__body {
+  padding: 28px 26px 22px;
+  text-align: center;
+}
+
+.confirm-dialog__icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  color: var(--danger);
+  background: var(--danger-wash);
+  border-radius: 50%;
+}
+
+.confirm-dialog__icon .icon {
+  width: 27px;
+  height: 27px;
+}
+
+.confirm-dialog__title {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.confirm-dialog__text {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.confirm-dialog__note {
+  margin-top: 14px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  background: #f4efe4;
+  border-radius: 10px;
+}
+
+.confirm-dialog__actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+@keyframes confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+@media (min-width: 420px) {
+  .confirm-dialog__actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}

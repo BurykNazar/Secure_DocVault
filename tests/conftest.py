@@ -26,6 +26,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from secure_docvault.factory import app  # noqa: E402
 from secure_docvault.persistence import session  # noqa: E402
+from secure_docvault.transport.gate import reset as reset_gate  # noqa: E402
 
 GOOD_PASSWORD = "Dossier2026!"
 
@@ -38,6 +39,12 @@ def form(**changes: str) -> dict[str, str]:
     }
     payload.update(changes)
     return payload
+
+
+@pytest.fixture(autouse=True)
+def _clean_gate():
+    """Кожен тест починається з чистими лічильниками й Greylist."""
+    reset_gate()
 
 
 @pytest.fixture()

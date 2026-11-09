@@ -46,14 +46,15 @@ python manage.py
 * bcrypt із фактором 12 та унікальною сіллю на кожен запис;
 * лише параметризовані SQL-запити (`?`), без склеювання рядків;
 * однакове повідомлення для невідомого користувача та невірного пароля;
-* JWT (HS256): access — 15 хв, refresh — 7 діб, ротація та заборона
-  `alg: none`;
+* JWT (HS256): access 15 хв, refresh 7 діб, ротація, заборона `alg: none`;
 * санітизація користувацького тексту (bleach) проти XSS;
 * коментарі зберігаються очищеними й доступні лише власнику;
 * cookie `HttpOnly`, `Secure`, `SameSite=Strict`;
 * CSP без `unsafe-inline` для застосунку, HSTS, `nosniff`,
   `X-Frame-Options: DENY`, `Referrer-Policy`;
-* CORS лише для дозволених Origin, без `*`.
+* CORS лише для дозволених Origin, без `*`;
+* rate limiting: 5/хв для входу, 60/хв для API, `429` + `Retry-After`;
+* WAF: path traversal, SQLi та command injection → `403` і Greylist.
 
 Докладніше: [`docs/security.md`](docs/security.md) і
 [`docs/client-security.md`](docs/client-security.md).
@@ -69,6 +70,7 @@ python -m pytest
 
 ```powershell
 python tools/jwt_demo.py
+python tools/stress_check.py
 python tools/injection_check.py
 python tools/db_report.py
 ```
@@ -84,7 +86,7 @@ secure_docvault/
   identity/                облікові записи, хешування, JWT
   security/                санітизація тексту
   comments/                коментарі: CRUD, лише свої
-  transport/               помилки, заголовки, cookie
+  transport/               помилки, заголовки, cookie, WAF і ліміти
   site/                    вебклієнт і довідка API
 frontend/                  каркас, власні SVG, стилі, компоненти
 tests/                     pytest
@@ -93,5 +95,6 @@ tools/                     допоміжні скрипти для звіту
 
 Принципи архітектури та межа у 100 рядків на файл — у
 [`docs/architecture.md`](docs/architecture.md). Порядок перевірки — у
-[`docs/testing.md`](docs/testing.md), [`docs/testing-jwt.md`](docs/testing-jwt.md)
-та [`docs/client-security.md`](docs/client-security.md).
+[`docs/testing.md`](docs/testing.md), [`docs/testing-jwt.md`](docs/testing-jwt.md),
+[`docs/client-security.md`](docs/client-security.md) та
+[`docs/network-security.md`](docs/network-security.md).

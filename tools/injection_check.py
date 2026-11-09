@@ -64,8 +64,8 @@ def main() -> int:
     failures = 0
     for label, payload in PAYLOADS:
         status, body = post(login, {"username": payload, "password": "WrongPass1!"})
-        verdict = "ЗАХИЩЕНО" if status == 401 else "ПЕРЕВІРИТИ"
-        failures += status != 401
+        verdict = "ЗАХИЩЕНО" if status in (401, 403) else "ПЕРЕВІРИТИ"
+        failures += status not in (401, 403)
         print(f"  [{verdict}] HTTP {status} — {label}")
         print(f"             payload: {payload}")
         print(f"             відповідь: {body.get('error', {}).get('message', '')}\n")
@@ -75,8 +75,8 @@ def main() -> int:
         register,
         {"username": "admin' OR '1'='1", "email": "attacker@example.com", "password": "SecurePass1!"},
     )
-    verdict = "ЗАХИЩЕНО" if status == 400 else "ПЕРЕВІРИТИ"
-    failures += status != 400
+    verdict = "ЗАХИЩЕНО" if status in (400, 403) else "ПЕРЕВІРИТИ"
+    failures += status not in (400, 403)
     fields = json.dumps(body.get("error", {}).get("fields", {}), ensure_ascii=False)
     print(f"  [{verdict}] HTTP {status}\n             поля: {fields}\n")
 

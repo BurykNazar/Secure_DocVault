@@ -16,6 +16,7 @@ from .persistence.schema import install
 from .settings import settings
 from .site.pages import router as site_routes
 from .site.reference import router as reference_routes
+from .transport.gate import guard
 from .transport.handlers import attach
 from .transport.headers import attach_headers
 
@@ -33,7 +34,7 @@ def build() -> FastAPI:
 
     application = FastAPI(
         title="Secure DocVault API",
-        version="0.3.0",
+        version="0.4.0",
         description="Корпоративне сховище конфіденційних документів.",
         lifespan=_lifecycle,
         docs_url=None,
@@ -42,6 +43,7 @@ def build() -> FastAPI:
     )
 
     attach(application)
+    application.middleware("http")(guard)
     application.add_middleware(
         CORSMiddleware,
         allow_origins=list(settings.cors_origins),

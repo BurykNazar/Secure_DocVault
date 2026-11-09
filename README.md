@@ -34,12 +34,12 @@ python manage.py
 | POST | `/api/v1/accounts/login` | увійти, отримати токени й cookie |
 | POST | `/api/v1/auth/refresh` | оновити пару токенів |
 | GET | `/api/v1/user/profile` | профіль за токеном або cookie |
-| GET/POST | `/api/v1/comments` | мої коментарі / додати |
-| PUT/DELETE | `/api/v1/comments/{id}` | змінити / видалити свій |
-| POST | `/api/v1/comments/preview` | очистити текст від HTML/JS |
+| GET | `/api/v1/documents` | мої документи |
+| POST | `/api/v1/documents/upload` | завантажити й зашифрувати |
+| GET/DELETE | `/api/v1/documents/{id}` | скачати / видалити |
+| GET/POST | `/api/v1/documents/{id}/comments` | коментарі до документа |
 
-Помилки мають єдиний формат `{ok, error{code, message, fields}}`, і
-сервер повертає всі зауваження до форми одразу.
+Помилки мають єдиний формат `{ok, error{code, message, fields}}`; сервер повертає всі зауваження одразу.
 
 ## Захист
 
@@ -49,15 +49,13 @@ python manage.py
 * JWT (HS256): access 15 хв, refresh 7 діб, ротація, заборона `alg: none`;
 * санітизація користувацького тексту (bleach) проти XSS;
 * коментарі зберігаються очищеними й доступні лише власнику;
+* AES-256-GCM для файлів: IV + Tag + шифротекст, AAD на документ;
 * cookie `HttpOnly`, `Secure`, `SameSite=Strict`;
 * CSP без `unsafe-inline` для застосунку, HSTS, `nosniff`,
   `X-Frame-Options: DENY`, `Referrer-Policy`;
 * CORS лише для дозволених Origin, без `*`;
 * rate limiting: 5/хв для входу, 60/хв для API, `429` + `Retry-After`;
 * WAF: path traversal, SQLi та command injection → `403` і Greylist.
-
-Докладніше: [`docs/security.md`](docs/security.md) і
-[`docs/client-security.md`](docs/client-security.md).
 
 ## Перевірка
 
@@ -84,17 +82,17 @@ secure_docvault/
   settings/                конфігурація з .env
   persistence/             SQLite: з'єднання, схема
   identity/                облікові записи, хешування, JWT
-  security/                санітизація тексту
-  comments/                коментарі: CRUD, лише свої
+  security/                санітизація тексту і AES-256-GCM
+  comments/                коментарі до документів
+  documents/               завантаження, шифрування, скачування
   transport/               помилки, заголовки, cookie, WAF і ліміти
   site/                    вебклієнт і довідка API
 frontend/                  каркас, власні SVG, стилі, компоненти
-tests/                     pytest
-tools/                     допоміжні скрипти для звіту
+tests/ і tools/            pytest та скрипти для звіту
 ```
 
 Принципи архітектури та межа у 100 рядків на файл — у
-[`docs/architecture.md`](docs/architecture.md). Порядок перевірки — у
-[`docs/testing.md`](docs/testing.md), [`docs/testing-jwt.md`](docs/testing-jwt.md),
-[`docs/client-security.md`](docs/client-security.md) та
-[`docs/network-security.md`](docs/network-security.md).
+[`docs/architecture.md`](docs/architecture.md). Деталі — у
+[`docs/security.md`](docs/security.md), [`docs/client-security.md`](docs/client-security.md),
+[`docs/network-security.md`](docs/network-security.md), [`docs/file-encryption.md`](docs/file-encryption.md)
+та [`docs/testing.md`](docs/testing.md), [`docs/testing-jwt.md`](docs/testing-jwt.md).

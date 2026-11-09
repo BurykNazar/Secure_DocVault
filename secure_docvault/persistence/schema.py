@@ -1,8 +1,6 @@
 """Схема бази даних.
 
 Таблиці створюються під час старту, повторний запуск нічого не змінює.
-Сіль зберігається окремою колонкою, як вимагає методичка; вона також
-входить до самого bcrypt-хеша.
 """
 
 from __future__ import annotations
@@ -22,21 +20,34 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """
 
-# owner_id зв'язує коментар із користувачем: вибірка й зміни завжди
-# фільтруються за власником, тому чужі записи недоступні.
-COMMENTS = """
-CREATE TABLE IF NOT EXISTS comments (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    owner_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    title      TEXT    NOT NULL,
-    body       TEXT    NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+DOCUMENTS = """
+CREATE TABLE IF NOT EXISTS documents (
+    id                TEXT    PRIMARY KEY,
+    owner_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    original_filename TEXT    NOT NULL,
+    stored_filename   TEXT    NOT NULL UNIQUE,
+    content_type      TEXT,
+    size_bytes        INTEGER NOT NULL,
+    encrypted_size    INTEGER NOT NULL,
+    sha256            TEXT    NOT NULL,
+    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+"""
+
+DOCUMENT_COMMENTS = """
+CREATE TABLE IF NOT EXISTS document_comments (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    document_id TEXT    NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+    author_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title       TEXT    NOT NULL,
+    body        TEXT    NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """
 
 
 def install() -> None:
     with session() as connection:
-        connection.execute(USERS)
-        connection.execute(COMMENTS)
+        for ddl in (USERS, DOCUMENTS, DOCUMENT_COMMENTS):
+            connection.execute(ddl)

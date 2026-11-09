@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .comments.routes import router as comment_routes
+from .documents.routes import router as document_routes
 from .identity.profile_routes import router as profile_routes
 from .identity.routes import router as identity_routes
 from .identity.session_routes import router as session_routes
@@ -34,7 +35,7 @@ def build() -> FastAPI:
 
     application = FastAPI(
         title="Secure DocVault API",
-        version="0.4.0",
+        version="0.5.0",
         description="Корпоративне сховище конфіденційних документів.",
         lifespan=_lifecycle,
         docs_url=None,
@@ -57,6 +58,7 @@ def build() -> FastAPI:
     application.include_router(session_routes)
     application.include_router(profile_routes)
     application.include_router(comment_routes)
+    application.include_router(document_routes)
     application.include_router(site_routes)
     application.include_router(reference_routes)
 

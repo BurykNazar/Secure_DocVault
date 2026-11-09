@@ -1,7 +1,8 @@
-"""Сценарії роботи з коментарями."""
+"""Сценарії коментарів, прив'язаних до документа."""
 
 from __future__ import annotations
 
+from ..documents import repository as documents
 from ..security.sanitizer import clean_text
 from ..transport.errors import MissingResource, ValidationRejected
 from . import repository
@@ -9,10 +10,14 @@ from .models import CommentDraft
 
 
 def _owner(claims: dict) -> int:
-    try:
-        return int(claims["sub"])
-    except (KeyError, TypeError, ValueError):
-        raise ValidationRejected("Некоректний токен") from None
+    return int(claims["sub"])
+
+
+def _ensure_document(document_id: str, claims: dict) -> int:
+    owner = _owner(claims)
+    if documents.get_for(owner, document_id) is None:
+        raise MissingResource("Документ не знайдено")
+    return owner
 
 
 def _clean(draft: CommentDraft) -> tuple[str, str]:
@@ -40,23 +45,27 @@ def _public(row: dict) -> dict:
     }
 
 
-def list_mine(claims: dict) -> list[dict]:
-    return [_public(row) for row in repository.list_for(_owner(claims))]
+def list_for(document_id: str, claims: dict) -> list[dict]:
+    owner = _ensure_document(document_id, claims)
+    return [_public(row) for row in repository.list_for(document_id, owner)]
 
 
-def create(claims: dict, draft: CommentDraft) -> dict:
+def create(document_id: str, claims: dict, draft: CommentDraft) -> dict:
+    owner = _ensure_document(document_id, claims)
     title, comment = _clean(draft)
-    return _public(repository.create(_owner(claims), title, comment))
+    return _public(repository.create(document_id, owner, title, comment))
 
 
-def update(claims: dict, comment_id: int, draft: CommentDraft) -> dict:
+def update(document_id: str, comment_id: int, claims: dict, draft: CommentDraft) -> dict:
+    owner = _ensure_document(document_id, claims)
     title, comment = _clean(draft)
-    row = repository.update(_owner(claims), comment_id, title, comment)
+    row = repository.update(document_id, owner, comment_id, title, comment)
     if row is None:
         raise MissingResource("Коментар не знайдено")
     return _public(row)
 
 
-def delete(claims: dict, comment_id: int) -> None:
-    if not repository.delete(_owner(claims), comment_id):
+def delete(document_id: str, comment_id: int, claims: dict) -> None:
+    owner = _ensure_document(document_id, claims)
+    if not repository.delete(document_id, owner, comment_id):
         raise MissingResource("Коментар не знайдено")

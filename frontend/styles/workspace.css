@@ -1,0 +1,99 @@
+/* Робоча область після входу: профіль і документи. */
+
+.workspace {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+}
+
+.workspace__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.workspace__bar .who__name {
+  font-size: 1.05rem;
+}
+
+.workspace__bar .btn {
+  width: auto;
+}
+
+.workspace .tabs {
+  margin: 0;
+}
+
+.documents {
+  display: grid;
+  gap: 16px;
+}
+
+/* Після входу ліва панель стає компактним хедером. */
+body.app-mode .page {
+  grid-template-columns: 1fr;
+}
+
+body.app-mode .story {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px clamp(18px, 4vw, 40px);
+  border-right: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+body.app-mode .story__body {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  max-width: none;
+}
+
+body.app-mode .story__kicker {
+  font-size: 0.8rem;
+}
+
+body.app-mode .story__title,
+body.app-mode .story__text,
+body.app-mode .story__art,
+body.app-mode .story__foot {
+  display: none;
+}
+
+body.app-mode .gate {
+  padding: 24px clamp(16px, 4vw, 40px) 48px;
+}
+
+body.app-mode .workspace {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  body.app-mode .story__body {
+    display: none;
+  }
+
+  body.app-mode .gate {
+    padding: 16px 14px 32px;
+  }
+}
+
+@media (max-width: 560px) {
+  .workspace__bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .workspace__bar .btn {
+    width: 100%;
+  }
+}

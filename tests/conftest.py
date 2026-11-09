@@ -41,6 +41,30 @@ def form(**changes: str) -> dict[str, str]:
     return payload
 
 
+def login_token(client, username: str = "nazar_buryk") -> str:
+    response = client.post(
+        "/api/v1/accounts/login",
+        json={"username": username, "password": GOOD_PASSWORD},
+    )
+    assert response.status_code == 200, response.text
+    return response.json()["access_token"]
+
+
+def upload_document(
+    client,
+    token: str,
+    name: str = "report.txt",
+    content: bytes = b"CONFIDENTIAL REPORT",
+) -> dict:
+    response = client.post(
+        "/api/v1/documents/upload",
+        files={"file": (name, content, "text/plain")},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 201, response.text
+    return response.json()["document"]
+
+
 @pytest.fixture(autouse=True)
 def _clean_gate():
     """Кожен тест починається з чистими лічильниками й Greylist."""

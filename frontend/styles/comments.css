@@ -16,6 +16,10 @@
   width: auto;
 }
 
+.comments__doc {
+  margin-bottom: 18px;
+}
+
 .comments__list {
   display: grid;
   gap: 12px;

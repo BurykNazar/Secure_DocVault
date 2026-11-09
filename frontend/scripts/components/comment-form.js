@@ -8,7 +8,7 @@ const TEMPLATE = `
 <form class="form" data-form novalidate>
   <div class="field">
     <label class="field__label" for="comment-title">Заголовок</label>
-    <input class="field__input" id="comment-title" name="title" maxlength="200" placeholder="Наприклад, звіт за квартал">
+    <input class="field__input" id="comment-title" name="title" maxlength="200" placeholder="Наприклад, зауваження до звіту">
     <p class="field__error" data-error-for="title"></p>
   </div>
   <div class="field">
@@ -24,7 +24,7 @@ const TEMPLATE = `
 </form>
 `;
 
-export function createCommentForm({ onSaved }) {
+export function createCommentForm({ getDocumentId, onSaved }) {
   const form = fromHTML(TEMPLATE);
   const submitLabel = form.querySelector("[data-label]");
   const cancel = form.querySelector("[data-cancel]");
@@ -49,14 +49,20 @@ export function createCommentForm({ onSaved }) {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const documentId = getDocumentId();
+    if (!documentId) {
+      showNotice(form, "Спочатку завантажте документ.");
+      return;
+    }
     resetMarks(form);
     setBusy(form, true, "Зберігаємо…");
-    const data = values(form);
+    const base = `/api/v1/documents/${documentId}/comments`;
+
     try {
       if (editingId) {
-        await call(`/api/v1/comments/${editingId}`, { method: "PUT", data });
+        await call(`${base}/${editingId}`, { method: "PUT", data: values(form) });
       } else {
-        await call("/api/v1/comments", { method: "POST", data });
+        await call(base, { method: "POST", data: values(form) });
       }
       toast(editingId ? "Коментар оновлено." : "Коментар додано.");
       reset();

@@ -1,0 +1,77 @@
+/* Список документів сховища. */
+
+.documents__list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.documents__empty {
+  padding: 16px 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--ink-faint);
+}
+
+.doc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  background: #fffdf8;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+}
+
+.doc__main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.doc__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  color: var(--forest);
+  background: var(--forest-wash);
+  border-radius: 10px;
+}
+
+.doc__icon .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.doc__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.doc__meta {
+  margin-top: 2px;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+.doc__actions {
+  display: flex;
+  flex: none;
+  gap: 14px;
+}
+
+@media (max-width: 560px) {
+  .doc {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .doc__actions {
+    align-self: flex-end;
+  }
+}

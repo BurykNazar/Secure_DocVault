@@ -65,12 +65,17 @@ async def guard(request: Request, call_next):
         log.warning("[WAF] IP %s still blocked, %ss left (%s)", ip, left, path)
         return _deny(403, "ip_banned", f"Ваш IP заблоковано WAF. Спробуйте через {left} с.")
 
-    body = await request.body()
-    if body:
-        async def receive(payload: bytes = body):
-            return {"type": "http.request", "body": payload, "more_body": False}
+    content_type = request.headers.get("content-type", "")
+    body = b""
+    # Файли завантажуються як multipart: їхній вміст не виконується,
+    # тому WAF перевіряє лише шлях і query, не читаючи все тіло в пам'ять.
+    if not content_type.startswith("multipart/"):
+        body = await request.body()
+        if body:
+            async def receive(payload: bytes = body):
+                return {"type": "http.request", "body": payload, "more_body": False}
 
-        request = Request(request.scope, receive=receive)
+            request = Request(request.scope, receive=receive)
 
     attack = inspect(path, request.url.query, body)
     if attack:

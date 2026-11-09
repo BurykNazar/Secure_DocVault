@@ -26,6 +26,7 @@ class Settings:
     client: Path
     hash_rounds: int
     jwt_secret: str
+    file_key: str
     cookie_secure: bool
     cors_origins: tuple[str, ...]
 
@@ -47,6 +48,11 @@ class Settings:
                 "VAULT_JWT_SECRET",
                 "7d3f9a2c5e8b1d4f6a9c3e7b0d5f8a2c"
                 "4e6b9d1f3a5c7e0b2d4f6a8c1e3b5d7f",
+            ),
+            file_key=env.text(
+                "VAULT_FILE_KEY",
+                "a1b2c3d4e5f60718293a4b5c6d7e8f90"
+                "112233445566778899aabbccddeeff00",
             ),
             # Secure-cookie працює за HTTPS (або на localhost). Для
             # звичайного HTTP-демо можна вимкнути через .env.

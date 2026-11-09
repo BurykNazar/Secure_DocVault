@@ -46,4 +46,6 @@ async def attach_headers(request, call_next):
         "max-age=31536000; includeSubDomains"
     )
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    if request.url.path.startswith("/static"):
+        response.headers["Cache-Control"] = "no-cache"
     return response

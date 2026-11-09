@@ -59,6 +59,10 @@
   background: var(--surface);
 }
 
-.gate > * {
+.gate > .stack {
   width: min(100%, 424px);
+}
+
+.gate > .workspace {
+  width: min(100%, 700px);
 }

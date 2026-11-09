@@ -25,6 +25,11 @@
     <path d="M6.4 8.2A17 17 0 0 0 2.8 12s3.4 6.1 9.2 6.1c1 0 1.9-.2 2.8-.5"/>
     <path d="M10.2 10.4a2.4 2.4 0 0 0 3.3 3.3"/>
   </symbol>
+  <symbol id="upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 16V4"/>
+    <path d="m7 9 5-5 5 5"/>
+    <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+  </symbol>
   <symbol id="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M4.5 12h14"/>
     <path d="m12.8 6.3 5.7 5.7-5.7 5.7"/>

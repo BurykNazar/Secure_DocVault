@@ -68,3 +68,15 @@ class ReplayDetected(DomainError):
     status = 401
     code = "token_reuse"
     brief = "Токен уже використано"
+
+
+class PayloadTooLarge(DomainError):
+    status = 413
+    code = "payload_too_large"
+    brief = "Файл перевищує допустимий розмір"
+
+
+class IntegrityViolation(DomainError):
+    status = 409
+    code = "integrity_failed"
+    brief = "Перевірка цілісності не пройдена"

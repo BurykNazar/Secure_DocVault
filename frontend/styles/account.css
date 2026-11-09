@@ -1,9 +1,3 @@
-.account {
-  display: grid;
-  gap: 16px;
-  width: 100%;
-}
-
 .who {
   display: flex;
   align-items: center;

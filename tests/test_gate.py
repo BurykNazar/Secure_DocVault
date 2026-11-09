@@ -60,12 +60,11 @@ def test_command_injection_is_blocked(client):
     assert response.json()["error"]["code"] == "waf_blocked"
 
 
-def test_xss_text_is_not_blocked_by_waf(client, member):
+def test_xss_text_is_not_blocked_by_waf(client):
     response = client.post(
-        "/api/v1/comments/preview",
-        json={"title": "Тест", "comment": "<script>alert(1)</script>"},
-        headers={"Cookie": "vault_access="},
+        "/api/v1/accounts/login",
+        json={"username": "<script>alert(1)</script>", "password": "x"},
     )
 
-    # Без токена буде 401, але не 403: WAF не чіпає XSS-текст.
+    # WAF не чіпає XSS-текст: запит доходить до перевірки входу.
     assert response.status_code == 401

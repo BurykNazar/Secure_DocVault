@@ -33,26 +33,3 @@ def test_login_sanitizes_the_username(client, member):
     )
 
     assert response.status_code == 200
-
-
-def test_comment_preview_shows_original_and_clean(client, member):
-    token = client.post(
-        "/api/v1/accounts/login",
-        json={"username": member["username"], "password": GOOD_PASSWORD},
-    ).json()["access_token"]
-
-    payload = {
-        "title": "<b>Звіт</b>",
-        "comment": "<script>alert('XSS')</script>",
-    }
-    response = client.post(
-        "/api/v1/comments/preview",
-        json=payload,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["original"]["comment"] == payload["comment"]
-    assert "<script" not in body["sanitized"]["comment"].lower()
-    assert body["sanitized"]["title"] == "Звіт"

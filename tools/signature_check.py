@@ -38,13 +38,19 @@ def main() -> int:
         return 1
     print("4. Штатний підпис успішно верифіковано")
 
-    tampered = original.replace(b"APPROVED", b"REJECTED")
-    valid = keys.verify_content(tampered, signature, public_key)
-    print("5. Перевірка підробленого документа...")
+    tampered = bytearray(original)
+    position = original.index(b"APPROVED") + 1
+    before = tampered[position]
+    tampered[position] ^= 0xFF
+    print(
+        f"5. Змінено 1 байт у позиції {position}: "
+        f"0x{before:02x} -> 0x{tampered[position]:02x}"
+    )
+    valid = keys.verify_content(bytes(tampered), signature, public_key)
     if valid:
         print("   ПОМИЛКА БЕЗПЕКИ: підпис прийняв змінений документ!")
         return 1
-    print("   --> УСПІХ: підпис відхилив змінений документ!")
+    print("   --> УСПІХ: підпис відхилив документ після зміни 1 байта!")
 
     public_pem = keys.serialize_public_key(public_key)
     private_pem = keys.serialize_private_key(private_key, "Aa1!aaaa")

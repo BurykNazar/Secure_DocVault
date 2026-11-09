@@ -1,4 +1,5 @@
 import { call } from "../core/http.js";
+import { fetchFile, saveBlob } from "../core/download.js";
 import { longDate } from "../core/format.js";
 import { fromHTML, icon } from "../core/markup.js";
 import { toast } from "../ui/toast.js";
@@ -15,7 +16,7 @@ const ITEM = `
     </div>
   </div>
   <div class="doc__actions">
-    <a class="link" data-download href="#" download>Скачати</a>
+    <button class="link" type="button" data-download>Скачати</button>
     <button class="link link--danger" type="button" data-delete>Видалити</button>
   </div>
 </article>
@@ -38,15 +39,43 @@ export function createDocumentList({ onChanged }) {
     }
     for (const document of documents) {
       const node = fromHTML(ITEM);
+      const signature = document.signature || {};
+      const signed =
+        signature.status === "signed" || signature.status === "verified";
+      const meta = node.querySelector(".doc__meta");
+
       node.querySelector(".doc__name").textContent = document.original_filename;
-      node.querySelector(".doc__meta").textContent =
-        `${sizeLabel(document.size_bytes)} · ${longDate(document.created_at)}`;
-      node.querySelector("[data-download]").href =
-        `/api/v1/documents/${document.id}/download`;
-      node.querySelector("[data-delete]").addEventListener("click", () =>
-        remove(document)
-      );
+      meta.textContent =
+        `${sizeLabel(document.size_bytes)} · ${longDate(document.created_at)}` +
+        ` · ${signed ? "Підписано" : "Без підпису"}`;
+      meta.classList.toggle("doc__meta--signed", signed);
+      meta.title = signed
+        ? `${signature.algorithm} · ${signature.signer || "—"}`
+        : "Документ без ЕЦП";
+      node
+        .querySelector("[data-download]")
+        .addEventListener("click", () => download(document));
+      node
+        .querySelector("[data-delete]")
+        .addEventListener("click", () => remove(document));
       root.append(node);
+    }
+  }
+
+  async function download(document) {
+    try {
+      const result = await fetchFile(
+        `/api/v1/documents/${document.id}/download`
+      );
+      saveBlob(result.blob, document.original_filename);
+      const status = result.headers.get("X-Signature-Status");
+      toast(
+        status === "Signed & Verified"
+          ? "Файл розшифровано. Підпис перевірено."
+          : "Файл розшифровано та завантажено."
+      );
+    } catch (error) {
+      toast(error.message || "Не вдалося скачати документ.", "bad");
     }
   }
 

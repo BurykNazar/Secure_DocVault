@@ -27,6 +27,7 @@ class Settings:
     hash_rounds: int
     jwt_secret: str
     file_key: str
+    signing_key: str
     cookie_secure: bool
     cors_origins: tuple[str, ...]
 
@@ -53,6 +54,12 @@ class Settings:
                 "VAULT_FILE_KEY",
                 "a1b2c3d4e5f60718293a4b5c6d7e8f90"
                 "112233445566778899aabbccddeeff00",
+            ),
+            # Окремий ключ для шифрування приватних ключів ЕЦП.
+            signing_key=env.text(
+                "VAULT_SIGNING_KEY",
+                "f0e1d2c3b4a5968778695a4b3c2d1e0f"
+                "00112233445566778899aabbccddeeff",
             ),
             # Secure-cookie працює за HTTPS (або на localhost). Для
             # звичайного HTTP-демо можна вимкнути через .env.

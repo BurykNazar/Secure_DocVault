@@ -1,0 +1,75 @@
+/* Картка ЕЦП, бейдж підпису та діалог експорту ключа. */
+
+.signature {
+  margin-bottom: 18px;
+}
+
+.signature__state {
+  display: inline-flex;
+  margin-top: 10px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  background: #f1ece1;
+  border-radius: 999px;
+}
+
+.signature__state--on {
+  color: var(--forest);
+  background: var(--forest-wash);
+}
+
+.signature__fingerprint {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.signature__actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.key-dialog {
+  width: min(92vw, 440px);
+  padding: 0;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.key-dialog::backdrop {
+  background: rgba(10, 30, 24, 0.45);
+}
+
+.key-dialog__form {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+}
+
+.key-dialog__actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.doc__meta--signed {
+  color: var(--forest);
+}
+
+@media (min-width: 560px) {
+  .signature__actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 480px) {
+  .key-dialog__actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}

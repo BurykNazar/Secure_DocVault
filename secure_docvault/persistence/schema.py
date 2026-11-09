@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 from .engine import session
+from .signing_tables import install as install_signing
 
 USERS = """
 CREATE TABLE IF NOT EXISTS users (
@@ -51,3 +52,4 @@ def install() -> None:
     with session() as connection:
         for ddl in (USERS, DOCUMENTS, DOCUMENT_COMMENTS):
             connection.execute(ddl)
+    install_signing()

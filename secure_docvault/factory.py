@@ -17,6 +17,7 @@ from .persistence.schema import install
 from .settings import settings
 from .site.pages import router as site_routes
 from .site.reference import router as reference_routes
+from .signing.routes import router as signing_routes
 from .transport.gate import guard
 from .transport.handlers import attach
 from .transport.headers import attach_headers
@@ -35,7 +36,7 @@ def build() -> FastAPI:
 
     application = FastAPI(
         title="Secure DocVault API",
-        version="0.5.0",
+        version="0.6.0",
         description="Корпоративне сховище конфіденційних документів.",
         lifespan=_lifecycle,
         docs_url=None,
@@ -59,6 +60,7 @@ def build() -> FastAPI:
     application.include_router(profile_routes)
     application.include_router(comment_routes)
     application.include_router(document_routes)
+    application.include_router(signing_routes)
     application.include_router(site_routes)
     application.include_router(reference_routes)
 

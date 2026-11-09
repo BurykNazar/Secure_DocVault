@@ -1,77 +1,27 @@
-"""Сценарії роботи з документами."""
+"""Скачування та видалення документів."""
 
 from __future__ import annotations
 
 import hashlib
-import uuid
 
 from cryptography.exceptions import InvalidTag
-from fastapi import UploadFile
 
+from ..signing.verification import verify_document
 from ..transport.errors import (
     IntegrityViolation,
     MissingResource,
-    PayloadTooLarge,
-    ValidationRejected,
+    SignatureRejected,
 )
 from . import repository, storage
-from .filenames import safe_name
+from .filenames import disposition
+from .listing import list_mine
+from .upload import upload
+
+__all__ = ["upload", "list_mine", "download", "delete"]
 
 
-def _owner(claims: dict) -> int:
-    return int(claims["sub"])
-
-
-def _public(row: dict) -> dict:
-    return {
-        "id": row["id"],
-        "original_filename": row["original_filename"],
-        "content_type": row["content_type"],
-        "size_bytes": row["size_bytes"],
-        "created_at": row["created_at"],
-    }
-def list_mine(claims: dict) -> list[dict]:
-    return [_public(row) for row in repository.list_for(_owner(claims))]
-async def upload(file: UploadFile, claims: dict) -> dict:
-    chunks: list[bytes] = []
-    total = 0
-    while True:
-        chunk = await file.read(storage.CHUNK)
-        if not chunk:
-            break
-        total += len(chunk)
-        if total > storage.MAX_BYTES:
-            raise PayloadTooLarge("Файл перевищує ліміт 10 МБ")
-        chunks.append(chunk)
-
-    if total == 0:
-        raise ValidationRejected("Файл порожній")
-
-    data = b"".join(chunks)
-    owner = _owner(claims)
-    filename = safe_name(file.filename)
-    doc_id = str(uuid.uuid4())
-    try:
-        stored, encrypted_size = storage.write(doc_id, owner, data)
-        repository.save(
-            doc_id,
-            owner,
-            filename,
-            stored,
-            file.content_type or "application/octet-stream",
-            total,
-            encrypted_size,
-            hashlib.sha256(data).hexdigest(),
-        )
-    except Exception:
-        storage.remove(f"{doc_id}.enc")
-        raise
-
-    row = repository.get_for(owner, doc_id)
-    assert row is not None
-    return _public(row)
-def download(doc_id: str, claims: dict) -> tuple[bytes, str, str]:
-    owner = _owner(claims)
+def download(doc_id: str, claims: dict) -> tuple[bytes, str, dict[str, str]]:
+    owner = int(claims["sub"])
     row = repository.get_for(owner, doc_id)
     if row is None:
         raise MissingResource("Документ не знайдено")
@@ -87,9 +37,36 @@ def download(doc_id: str, claims: dict) -> tuple[bytes, str, str]:
 
     if hashlib.sha256(data).hexdigest() != row["sha256"]:
         raise IntegrityViolation("SHA-256 розшифрованого файлу не збігається")
-    return data, row["original_filename"], row["content_type"]
+
+    signature = verify_document(doc_id, data)
+    if signature["status"] == "invalid":
+        raise SignatureRejected(
+            "Цифровий підпис документа недійсний: підпис не відповідає вмісту."
+        )
+
+    headers = {
+        "Content-Disposition": disposition(row["original_filename"]),
+        "X-Content-SHA256": row["sha256"],
+        "X-Signature-Status": (
+            "Signed & Verified"
+            if signature["status"] == "verified"
+            else "Unsigned"
+        ),
+    }
+    if signature["status"] == "verified":
+        headers.update(
+            {
+                "X-Signature-Algorithm": signature["algorithm"],
+                "X-Signature-Fingerprint": signature["fingerprint"],
+                "X-Signer": signature.get("signer") or "",
+                "X-Signed-At": signature.get("signed_at") or "",
+            }
+        )
+    return data, row["content_type"] or "application/octet-stream", headers
+
+
 def delete(doc_id: str, claims: dict) -> None:
-    owner = _owner(claims)
+    owner = int(claims["sub"])
     row = repository.get_for(owner, doc_id)
     if row is None:
         raise MissingResource("Документ не знайдено")

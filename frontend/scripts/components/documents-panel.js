@@ -3,10 +3,12 @@ import { fromHTML } from "../core/markup.js";
 import { toast } from "../ui/toast.js";
 import { createCommentsPanel } from "./comments-panel.js";
 import { createDocumentList } from "./document-list.js";
+import { createSignaturePanel } from "./signature-panel.js";
 import { createUploadForm } from "./upload-form.js";
 
 const TEMPLATE = `
 <div class="documents">
+  <div data-signature-host></div>
   <section class="card">
     <header class="card__head">
       <p class="card__kicker">Сховище</p>
@@ -23,9 +25,16 @@ const TEMPLATE = `
 export function createDocumentsPanel() {
   const panel = fromHTML(TEMPLATE);
   const comments = createCommentsPanel();
+  const signature = createSignaturePanel();
   const list = createDocumentList({ onChanged: () => load() });
-  const upload = createUploadForm({ onUploaded: () => load() });
+  const upload = createUploadForm({
+    onUploaded: () => {
+      load();
+      signature.load();
+    },
+  });
 
+  panel.querySelector("[data-signature-host]").append(signature.element);
   panel.querySelector("[data-upload-host]").append(upload.element);
   panel.querySelector("[data-list-host]").append(list.element);
   panel.querySelector("[data-comments-host]").append(comments.element);

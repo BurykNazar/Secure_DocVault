@@ -24,3 +24,8 @@ export function longDate(value) {
 export function accessName(role) {
   return role === "admin" ? "Адміністратор" : "Користувач";
 }
+
+export function shortHash(value) {
+  if (!value) return "—";
+  return value.length <= 24 ? value : `${value.slice(0, 12)}…${value.slice(-8)}`;
+}

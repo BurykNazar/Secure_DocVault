@@ -80,3 +80,15 @@ class IntegrityViolation(DomainError):
     status = 409
     code = "integrity_failed"
     brief = "Перевірка цілісності не пройдена"
+
+
+class SignatureRejected(DomainError):
+    status = 409
+    code = "signature_invalid"
+    brief = "Електронний підпис недійсний"
+
+
+class InternalFailure(DomainError):
+    status = 500
+    code = "internal_error"
+    brief = "Внутрішня помилка сервера"

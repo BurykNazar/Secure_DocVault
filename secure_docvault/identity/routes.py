@@ -1,7 +1,8 @@
 """HTTP-маршрути облікових записів."""
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Response, status
 
+from ..transport.cookies import set_access_cookie
 from .authentication import sign_in
 from .models import SignIn, SignUp
 from .registration import sign_up
@@ -25,11 +26,14 @@ def register(payload: SignUp) -> dict:
 
 
 @router.post("/login", summary="Увійти в обліковий запис")
-def login(payload: SignIn) -> dict:
+def login(payload: SignIn, response: Response) -> dict:
     account = sign_in(payload)
+    tokens = issue_pair(account)
+    set_access_cookie(response, tokens["access_token"])
+
     return {
         "ok": True,
         "message": f"Вітаємо, {account['username']}!",
         "account": account,
-        **issue_pair(account),
+        **tokens,
     }

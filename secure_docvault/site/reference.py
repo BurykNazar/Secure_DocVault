@@ -11,7 +11,7 @@ from scalar_fastapi import get_scalar_api_reference
 router = APIRouter(include_in_schema=False)
 
 
-@router.get("/api/docs", response_class=HTMLResponse)
+@router.api_route("/api/docs", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def reference() -> HTMLResponse:
     return get_scalar_api_reference(
         openapi_url="/api/openapi.json",

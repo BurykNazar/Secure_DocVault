@@ -9,7 +9,7 @@ from ..transport.errors import MissingResource
 router = APIRouter(include_in_schema=False)
 
 
-@router.get("/", response_class=FileResponse)
+@router.api_route("/", methods=["GET", "HEAD"], response_class=FileResponse)
 def home() -> FileResponse:
     index = settings.client / "index.html"
     if not index.is_file():

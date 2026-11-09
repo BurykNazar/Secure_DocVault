@@ -26,6 +26,8 @@ class Settings:
     client: Path
     hash_rounds: int
     jwt_secret: str
+    cookie_secure: bool
+    cors_origins: tuple[str, ...]
 
     @classmethod
     def read(cls) -> "Settings":
@@ -45,6 +47,17 @@ class Settings:
                 "VAULT_JWT_SECRET",
                 "7d3f9a2c5e8b1d4f6a9c3e7b0d5f8a2c"
                 "4e6b9d1f3a5c7e0b2d4f6a8c1e3b5d7f",
+            ),
+            # Secure-cookie працює за HTTPS (або на localhost). Для
+            # звичайного HTTP-демо можна вимкнути через .env.
+            cookie_secure=env.flag("VAULT_COOKIE_SECURE", True),
+            cors_origins=tuple(
+                item.strip()
+                for item in env.text(
+                    "VAULT_CORS_ORIGINS",
+                    "http://127.0.0.1:8000,http://localhost:8000",
+                ).split(",")
+                if item.strip()
             ),
         )
 

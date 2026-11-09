@@ -1,15 +1,15 @@
 """Схема бази даних.
 
-Таблиця створюється один раз під час старту, повторний запуск нічого
-не змінює. Сіль зберігається окремою колонкою, як вимагає методичка;
-вона також входить до самого bcrypt-хеша.
+Таблиці створюються під час старту, повторний запуск нічого не змінює.
+Сіль зберігається окремою колонкою, як вимагає методичка; вона також
+входить до самого bcrypt-хеша.
 """
 
 from __future__ import annotations
 
 from .engine import session
 
-DDL = """
+USERS = """
 CREATE TABLE IF NOT EXISTS users (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     username      TEXT    UNIQUE NOT NULL,
@@ -22,7 +22,21 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """
 
+# owner_id зв'язує коментар із користувачем: вибірка й зміни завжди
+# фільтруються за власником, тому чужі записи недоступні.
+COMMENTS = """
+CREATE TABLE IF NOT EXISTS comments (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title      TEXT    NOT NULL,
+    body       TEXT    NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+"""
+
 
 def install() -> None:
     with session() as connection:
-        connection.execute(DDL)
+        connection.execute(USERS)
+        connection.execute(COMMENTS)

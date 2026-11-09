@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 
+from ..security.sanitizer import clean_text
 from ..transport.errors import DuplicateAccount, ValidationRejected
 from . import mutations, queries
 from .account_rules import validate_signup
@@ -13,7 +14,7 @@ from .profile import public
 
 
 def sign_up(payload: SignUp) -> dict:
-    username = payload.username.strip()
+    username = clean_text(payload.username)
     email = payload.email.strip()
 
     issues = validate_signup(username, email, payload.password)

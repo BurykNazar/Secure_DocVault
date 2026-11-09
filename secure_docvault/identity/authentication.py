@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ..security.sanitizer import clean_text
 from ..transport.errors import InvalidLogin, ValidationRejected
 from . import queries
 from .account_rules import validate_signin
@@ -15,7 +16,7 @@ REJECTION = "Невірне ім'я користувача або пароль"
 
 
 def sign_in(payload: SignIn) -> dict:
-    username = payload.username.strip()
+    username = clean_text(payload.username)
 
     issues = validate_signin(username, payload.password)
     if issues:

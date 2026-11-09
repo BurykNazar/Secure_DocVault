@@ -4,7 +4,7 @@ const TEMPLATE = `
 <dialog class="key-dialog" data-dialog>
   <form class="key-dialog__form" data-form novalidate>
     <h2 class="card__title">Експорт приватного ключа</h2>
-    <p class="card__lead">Ключ буде зашифровано парольною фразою у форматі PKCS#8.</p>
+    <p class="card__lead">Придумайте парольну фразу — нею буде захищено файл ключа.</p>
     <label class="field">
       <span class="field__label">Парольна фраза</span>
       <input class="field__input" type="password" data-passphrase

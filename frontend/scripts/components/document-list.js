@@ -50,7 +50,7 @@ export function createDocumentList({ onChanged }) {
         ` · ${signed ? "Підписано" : "Без підпису"}`;
       meta.classList.toggle("doc__meta--signed", signed);
       meta.title = signed
-        ? `${signature.algorithm} · ${signature.signer || "—"}`
+        ? `Підписано: ${signature.signer || "—"}`
         : "Документ без ЕЦП";
       node
         .querySelector("[data-download]")

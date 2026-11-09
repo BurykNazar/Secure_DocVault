@@ -8,13 +8,12 @@ import { createExportDialog } from "./export-key-dialog.js";
 const TEMPLATE = `
 <section class="card signature">
   <header class="card__head">
-    <p class="card__kicker">ЕЦП · RSA-PSS / SHA-256</p>
+    <p class="card__kicker">ЕЦП</p>
     <h2 class="card__title">Цифровий підпис</h2>
     <p class="card__lead">Документи підписуються автоматично під час завантаження, а підпис перевіряється під час скачування.</p>
     <span class="signature__state" data-state>Ключ не створено</span>
   </header>
   <dl class="facts">
-    <div><dt>${icon("shield")} Алгоритм</dt><dd data-algorithm>—</dd></div>
     <div><dt>${icon("user")} Відбиток</dt><dd class="signature__fingerprint" data-fingerprint>—</dd></div>
     <div><dt>${icon("clock")} Створено</dt><dd data-created>—</dd></div>
   </dl>
@@ -32,18 +31,16 @@ export function createSignaturePanel() {
 
   const q = (selector) => root.querySelector(selector);
   const ui = {
-    state: q("[data-state]"), algorithm: q("[data-algorithm]"),
-    fingerprint: q("[data-fingerprint]"), created: q("[data-created]"),
-    generate: q("[data-generate]"), public: q("[data-public]"),
-    export: q("[data-export]"),
+    state: q("[data-state]"), fingerprint: q("[data-fingerprint]"),
+    created: q("[data-created]"), generate: q("[data-generate]"),
+    public: q("[data-public]"), export: q("[data-export]"),
   };
 
   function update(key) {
     const exists = Boolean(key);
     ui.state.textContent = exists ? "Ключ створено" : "Ключ не створено";
     ui.state.classList.toggle("signature__state--on", exists);
-    ui.algorithm.textContent = exists ? key.algorithm : "—";
-    ui.fingerprint.textContent = shortHash(key.fingerprint);
+    ui.fingerprint.textContent = shortHash(key?.fingerprint);
     ui.fingerprint.title = exists ? key.fingerprint : "";
     ui.created.textContent = exists ? longDate(key.created_at) : "—";
     ui.generate.hidden = exists;

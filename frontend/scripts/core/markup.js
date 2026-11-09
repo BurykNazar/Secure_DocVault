@@ -1,4 +1,4 @@
-const SPRITE = "/static/assets/icons.svg?v=6";
+const SPRITE = "/static/assets/icons.svg?v=7";
 
 /** Перетворює рядок розмітки на готовий елемент. */
 export function fromHTML(source) {

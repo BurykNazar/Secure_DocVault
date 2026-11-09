@@ -1,0 +1,93 @@
+/* Панель «Мої коментарі» після входу. */
+
+.field__input--area {
+  min-height: 92px;
+  resize: vertical;
+  font-family: var(--sans);
+}
+
+.comments__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comments__actions .btn {
+  width: auto;
+}
+
+.comments__list {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.comments__empty {
+  padding: 16px 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--ink-faint);
+}
+
+.note {
+  padding: 14px 16px;
+  background: #fffdf8;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+}
+
+.note__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.note__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.note__time {
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.note__text {
+  margin-top: 6px;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.link {
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--forest);
+  background: none;
+  border: 0;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link--danger {
+  color: var(--danger);
+}
+
+@media (max-width: 560px) {
+  .comments__actions .btn {
+    flex: 1;
+  }
+}

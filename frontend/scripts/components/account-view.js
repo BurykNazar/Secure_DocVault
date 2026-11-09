@@ -1,5 +1,6 @@
 import { accessName, initials, longDate } from "../core/format.js";
 import { fromHTML, icon } from "../core/markup.js";
+import { createCommentsPanel } from "./comments-panel.js";
 
 const TEMPLATE = `
 <section class="card">
@@ -32,5 +33,8 @@ export function createAccountView({ account, onLeave }) {
   view.querySelector("[data-created]").textContent = longDate(account.created_at);
   view.querySelector("[data-leave]").addEventListener("click", onLeave);
 
-  return view;
+  const wrapper = document.createElement("div");
+  wrapper.className = "account";
+  wrapper.append(view, createCommentsPanel());
+  return wrapper;
 }
